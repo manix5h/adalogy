@@ -25,8 +25,17 @@ export default function RegisterForm() {
     setLoading(true);
 
     try {
-      await register(formData.name, formData.email, formData.password, formData.role);
-      navigate('/');
+      const response = await register(formData.name, formData.email, formData.password, formData.role);
+      // Registration successful के बाद
+if (response.data.success) {
+  
+      if (response.data.success) {
+      // ✅ METHOD 1: window.location (99.9% success rate)
+      window.location.href = '/verify-email';
+      return; // Exit immediately
+    }
+}
+    
     } catch (err) {
       setError(err.response?.data?.msg || 'Registration failed');
     } finally {
@@ -90,6 +99,10 @@ export default function RegisterForm() {
       </div>
 
       <button
+       onClick={() => {
+      console.log('🔍 Manual redirect test');
+      window.location.href = '/verify-email';
+    }}
         type="submit"
         disabled={loading}
         className="w-full bg-primary text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"

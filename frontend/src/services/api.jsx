@@ -19,6 +19,8 @@ export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
   getProfile: () => api.get('/auth/profile'),
+   verifyEmail: (token) => api.post('/auth/verify-email', { token }),  // ✅ नया
+  resendVerificationEmail: (email) => api.post('/auth/resend-verification', { email }),  // ✅ नया
 };
 
 export const campaignAPI = {
@@ -53,7 +55,7 @@ export const userAPI = {
   getProfile: () => api.get('/users/profile'),
   updateProfile: (data) => api.patch('/users/profile', data),
   updatePaymentDetails: (data) => api.patch('/users/payment-details', data),
-  getStats: () => api.get('/users/stats'),
+  getUserStats: () => api.get('/users/stats'),
   getPublicProfile: (userId) => api.get(`/users/public/${userId}`),
 };
 

@@ -19,6 +19,11 @@ import CreateCampaignForm from './components/Forms/CreateCampaignForm';
 import MyAllCampaigns from './pages/Advertiser/MyAllCampaigns';
 import CampaignDetail from './pages/Worker/CampaignDetail';
 import PublicCampaigns from './pages/Worker/PublicCampaigns';
+import MyProfile from './pages/profile/MyProfile';
+import PaymentSettings from './pages/profile/PaymentSettings';
+import UserStats from './pages/profile/UserStats';
+import PublicProfile from './pages/profile/PublicProfile';
+import VerifyEmail from './pages/Auth/VerifyEmail';
 
 
 export default function App() {
@@ -34,6 +39,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
 
               <Route
                 path="/worker/dashboard"
@@ -91,6 +97,39 @@ export default function App() {
 <Route
   path="/campaigns"
   element={<PublicCampaigns />}
+/>
+
+
+<Route
+  path="/worker/profile"
+  element={
+    <PrivateRoute>
+      <MyProfile />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/worker/payment"
+  element={
+    <PrivateRoute>
+      <PaymentSettings />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/worker/stats"
+  element={
+    <PrivateRoute>
+      <UserStats />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/user/:userId"
+  element={<PublicProfile />}
 />
 
 

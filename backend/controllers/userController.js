@@ -48,12 +48,16 @@ const updateProfile = async (req, res) => {
 
 const updatePaymentDetails = async (req, res) => {
   try {
-    const { bankAccount, upiId, phonepe } = req.body;
-
+    const { bankAccount, upiId, phonepe } = req.body;  // ✅ Nested bankAccount
+    
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { bankAccount, upiId, phonepe },
-      { new: true }
+      { 
+        bankAccount,  // Nested object direct save
+        upiId, 
+        phonepe 
+      },
+      { new: true, runValidators: true }
     );
 
     res.json({
@@ -68,6 +72,7 @@ const updatePaymentDetails = async (req, res) => {
     });
   }
 };
+
 
 const getUserStats = async (req, res) => {
   try {

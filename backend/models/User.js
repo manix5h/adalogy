@@ -120,6 +120,9 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email'],
   },
+   isEmailVerified: { type: Boolean, default: false },  // ✅ नया field
+  emailVerificationToken: String,                        // ✅ Token store
+  emailVerificationExpire: Date,  
   password: {
     type: String,
     required: [true, 'Password is required'],
