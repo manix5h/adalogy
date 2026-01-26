@@ -8,7 +8,7 @@ export default function Home() {
   return (   
     <div className="max-w-7xl mx-auto px-4 py-10">
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold bg-red-500 mb-4">Welcome to LogoPromo</h1>
+        <h1 className="text-4xl font-bold  mb-4">Welcome to LogoPromo</h1>
         <p className="text-gray-600 text-lg mb-6">
           Connect workers with paid campaigns and grow your business
         </p>
@@ -44,7 +44,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="bg-white p-6 rounded shadow text-center">
-          <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+          <h2 className="text-2xl font-bold mb-4 ">Dashboard</h2>
           <p className="text-gray-600 mb-4">
             {user.role === 'worker' && 'Find campaigns and complete tasks'}
             {user.role === 'advertiser' && 'Create campaigns and manage workers'}

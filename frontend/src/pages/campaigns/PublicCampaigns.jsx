@@ -111,7 +111,7 @@ export default function PublicCampaigns() {
               )}
 
               <Link
-                to={`/campaign/${campaign._id}`}
+                to={`/worker/campaign/${campaign._id}`}
                 className="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 text-center block"
               >
                 View Details & Apply

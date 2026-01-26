@@ -18,7 +18,7 @@ const taskSchema = new mongoose.Schema({
   },
   payout: {
     type: Number,
-    required: true,
+    // required: true,
   },
   proofUrl: String,
   proofDescription: String,

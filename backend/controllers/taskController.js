@@ -5,6 +5,7 @@ const User = require('../models/User');
 const joinTask = async (req, res) => {
   try {
     const { campaignId } = req.body;
+    console.log(campaignId);
 
     if (!campaignId) {
       return res.status(400).json({
@@ -12,7 +13,7 @@ const joinTask = async (req, res) => {
         msg: 'Campaign ID is required',
       });
     }
-
+console.log(campaignId);
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) {
       return res.status(404).json({
@@ -41,6 +42,7 @@ const joinTask = async (req, res) => {
       campaignId,
       workerId: req.user.id,
       status: 'assigned',
+      payout: campaign.payoutPerTask
     });
 
     res.status(201).json({
@@ -76,9 +78,9 @@ const getMyTasks = async (req, res) => {
 
 const submitProof = async (req, res) => {
   try {
-    const { proofLink, proofDescription } = req.body;
+    const { proofUrl, proofDescription } = req.body;
 
-    if (!proofLink) {
+    if (!proofUrl) {
       return res.status(400).json({
         success: false,
         msg: 'Proof link is required',
@@ -101,7 +103,7 @@ const submitProof = async (req, res) => {
       });
     }
 
-    task.proofLink = proofLink;
+    task.proofUrl = proofUrl;
     task.proofDescription = proofDescription;
     task.status = 'submitted';
     await task.save();
@@ -119,6 +121,65 @@ const submitProof = async (req, res) => {
   }
 };
 
+// ✅ NEW FUNCTION - Creator के लिए Campaign Tasks
+const getCampaignTasks = async (req, res) => {
+  try {
+    const campaignId = req.params.campaignId;
+    console.log('🔍 Creator fetching tasks for campaign:');
+
+    // 1. Check if campaign belongs to creator
+    const campaign = await Campaign.findOne({
+      _id: campaignId,
+      advertiser: req.user.id  // Only creator can see tasks
+    });
+
+    if (!campaign) {
+      return res.status(403).json({
+        success: false,
+        msg: 'Campaign not found or access denied'
+      });
+    }
+
+    // 2. Get all tasks for this campaign
+    const tasks = await Task.find({ campaignId })
+      .populate('workerId', 'name email profileImage')  // Worker details
+      .populate('campaignId', 'title payoutPerTask')     // Campaign details
+      .sort({ createdAt: -1 })                           // Latest first
+      .lean();
+
+    // 3. Add stats
+    const stats = {
+      total: tasks.length,
+      assigned: tasks.filter(t => t.status === 'assigned').length,
+      submitted: tasks.filter(t => t.status === 'submitted').length,
+      completed: tasks.filter(t => t.status === 'completed').length,
+      rejected: tasks.filter(t => t.status === 'rejected').length
+    };
+
+    console.log(`✅ Found ${tasks.length} tasks. Stats:`, stats);
+
+    res.json({
+      success: true,
+      tasks,
+      stats,
+      campaign: {
+        _id: campaign._id,
+        title: campaign.title,
+        payoutPerTask: campaign.payoutPerTask,
+        maxTasks: campaign.maxTasks
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ getCampaignTasks error:', error);
+    res.status(500).json({
+      success: false,
+      msg: 'Failed to fetch campaign tasks'
+    });
+  }
+};
+
+
 const approveTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id).populate('campaignId workerId');
@@ -130,7 +191,7 @@ const approveTask = async (req, res) => {
       });
     }
 
-    if (task.campaignId.createdBy.toString() !== req.user.id) {
+    if (task.campaignId.advertiser.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
         msg: 'Unauthorized',
@@ -171,7 +232,7 @@ const rejectTask = async (req, res) => {
       });
     }
 
-    if (task.campaignId.createdBy.toString() !== req.user.id) {
+    if (task.campaignId.advertiser.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
         msg: 'Unauthorized',
@@ -199,6 +260,7 @@ module.exports = {
   joinTask,
   getMyTasks,
   submitProof,
+  getCampaignTasks,
   approveTask,
   rejectTask,
 };

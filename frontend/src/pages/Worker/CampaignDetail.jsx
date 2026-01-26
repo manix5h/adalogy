@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { campaignAPI } from '../../services/api';
-
+import { campaignAPI,taskAPI } from '../../services/api';
+import { motion } from 'framer-motion';
 export default function CampaignDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -9,9 +9,13 @@ export default function CampaignDetail() {
   const [tasksCompleted, setTasksCompleted] = useState(0);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
+const [joining, setJoining] = useState(false);
+const [hasJoined, setHasJoined] = useState(false);
+ 
 
   useEffect(() => {
     fetchCampaign();
+    
   }, [id]);
 
   const fetchCampaign = async () => {
@@ -27,17 +31,20 @@ export default function CampaignDetail() {
     }
   };
 
-  const handleApplyForCampaign = async () => {
-    setApplying(true);
-    try {
-      // यह फिलहाल placeholder है - बाद में implement करेंगे
-      alert('✅ Application submitted! We will review and get back to you.');
-      setApplying(false);
-    } catch (error) {
-      alert('❌ Error: ' + error.message);
-      setApplying(false);
-    }
-  };
+
+
+  const handleJoin = async () => {
+  setJoining(true);
+  try {
+    await taskAPI.joinTask({ campaignId: id }); 
+    setHasJoined(true);
+    alert('✅ Joined successfully! Check My Tasks');
+  } catch (error) {
+    console.error('Error joining campaign:', error);
+  } finally {
+    setJoining(false);
+  }
+};
 
   if (loading) return <div className="text-center py-10 text-lg">Loading campaign...</div>;
   if (!campaign) return <div className="text-center py-10 text-lg">Campaign not found</div>;
@@ -155,7 +162,7 @@ export default function CampaignDetail() {
           </div>
         )}
 
-        {/* Action Button */}
+        {/* Action Button
         {campaign.status === 'active' && remainingTasks > 0 ? (
           <button
             onClick={handleApplyForCampaign}
@@ -172,8 +179,32 @@ export default function CampaignDetail() {
           <div className="w-full bg-gray-400 text-white py-3 rounded font-bold text-lg text-center">
             ✅ All tasks completed
           </div>
-        )}
+        )} */}
+
+       
       </div>
+
+      { campaign.status === 'active' && !hasJoined && (
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={handleJoin}
+    disabled={joining || campaign.joinedTasks >= campaign.maxTasks}
+    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white py-6 px-8 rounded-3xl font-bold text-xl shadow-2xl hover:shadow-3xl"
+  >
+    {joining ? (
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin" />
+        Joining...
+      </div>
+    ) : (
+      <>
+        🚀 Join Now (₹{campaign.payoutPerTask})
+      </>
+    )}
+  </motion.button>
+)}
+
     </div>
   );
 }

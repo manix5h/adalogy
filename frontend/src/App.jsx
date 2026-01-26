@@ -15,15 +15,21 @@ import NotFound from './pages/Common/NotFound';
 import Unauthorized from './pages/Common/Unathorized';
 import WorkerDashboard from './pages/Worker/Dasboard';
 import AdvertiserDashboard from './pages/Advertiser/Dashboard';
-import CreateCampaignForm from './components/Forms/CreateCampaignForm';
-import MyAllCampaigns from './pages/Advertiser/MyAllCampaigns';
-import CampaignDetail from './pages/Worker/CampaignDetail';
-import PublicCampaigns from './pages/Worker/PublicCampaigns';
+import CreateCampaignForm from './pages/Advertiser/CreateCampaignForm';
+
+import CampaignDetailW from './pages/Worker/CampaignDetail';
+import CampaignDetailA from './pages/Advertiser/CampaignDetail';
+import PublicCampaigns from './pages/campaigns/PublicCampaigns';
 import MyProfile from './pages/profile/MyProfile';
 import PaymentSettings from './pages/profile/PaymentSettings';
 import UserStats from './pages/profile/UserStats';
 import PublicProfile from './pages/profile/PublicProfile';
 import VerifyEmail from './pages/Auth/VerifyEmail';
+import MyTasks from './pages/tasks/MyTasks';
+import MyCampaigns from './pages/Advertiser/MyCampaign';
+import CreatorTasks from './pages/campaigns/CreatorTasks';
+import RaiseDisputeModal from './pages/Advertiser/RiaseDisputeModal';
+
 
 
 export default function App() {
@@ -50,10 +56,10 @@ export default function App() {
                 }
               />
               <Route
-  path="/campaign/:id"
+  path="/worker/campaign/:id"
   element={
     <PrivateRoute requiredRole="worker">
-      <CampaignDetail />
+      <CampaignDetailW />
     </PrivateRoute>
   }
 />
@@ -66,6 +72,8 @@ export default function App() {
   }
 />
 
+
+
               <Route
                 path="/advertiser/dashboard"
                 element={
@@ -74,8 +82,9 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
+           
               <Route
-                path="/advertiser/create"
+                path="/advertiser/create-campaign"
                 element={
                   <PrivateRoute requiredRole="advertiser">
                     <CreateCampaignForm />
@@ -84,14 +93,27 @@ export default function App() {
               />
 
               <Route
-  path="/advertiser/campaigns"
+  path="/advertiser/campaign/:id"
   element={
     <PrivateRoute requiredRole="advertiser">
-      <MyAllCampaigns />
+      <CampaignDetailA />
     </PrivateRoute>
   }
 />
 
+              <Route
+  path="/advertiser/campaigns"
+  element={
+    <PrivateRoute requiredRole="advertiser">
+      <MyCampaigns />
+    </PrivateRoute>
+  }
+/>
+<Route path="/advertiser/campaign/:campaignId/tasks" element={
+  
+    <CreatorTasks />
+  
+} />
 
 
 <Route
@@ -131,6 +153,12 @@ export default function App() {
   path="/user/:userId"
   element={<PublicProfile />}
 />
+
+
+
+//task
+<Route path="/worker/tasks" element={<MyTasks />} />
+
 
 
               <Route path="*" element={<NotFound />} />

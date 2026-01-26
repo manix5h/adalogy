@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { campaignAPI } from '../../services/api';
-import UpdateDelete from './UpdateDelete';
+
 
 export default function MyCampaigns() {
   const [campaigns, setCampaigns] = useState([]);
@@ -36,25 +36,6 @@ export default function MyCampaigns() {
       alert('❌ Error: ' + (error.response?.data?.msg || error.message));
     }
   };
-  // const handleStatusUpdate = async (campaignId, campaignId) => {
-  //   try {
-  //     const response = await campaignAPI.updateCampaignStatus(campaignId, newStatus);
-      
-  //     if (response.data.success) {
-  //       // Update local state
-  //       setCampaigns(prev => prev.map(campaign => 
-  //         campaign._id === campaignId 
-  //           ? { ...campaign, status: newStatus }
-  //           : campaign
-  //       ));
-  //       alert('✅ Status updated successfully!');
-  //     }
-  //   } catch (error) {
-  //     const msg = error.response?.data?.msg || error.message;
-  //     alert(`❌ Error: ${msg}`);
-  //     console.error('Status update error:', error);
-  //   }
-  // };
   const handleStatusUpdate = async (campaignId, newStatus) => {
     try {
       const response = await campaignAPI.updateCampaignStatus(campaignId, newStatus);
@@ -179,7 +160,7 @@ export default function MyCampaigns() {
           ))}
         </div>
       )}
-      <UpdateDelete />
+     
     </div>
   );
 }

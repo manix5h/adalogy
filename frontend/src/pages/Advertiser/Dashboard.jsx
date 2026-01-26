@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function AdvertiserDashboard() {
   const { user } = useAuth();
+  console.log(user);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
@@ -28,7 +29,7 @@ export default function AdvertiserDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link
-          to="/advertiser/create"
+          to="/advertiser/create-campaign"
           className="bg-primary text-white p-6 rounded text-center hover:bg-blue-700"
         >
           <h3 className="text-xl font-bold">Create Campaign</h3>
@@ -57,6 +58,14 @@ export default function AdvertiserDashboard() {
         >
           <h3 className="text-xl font-bold">Profile</h3>
           <p>Edit your profile</p>
+        </Link>
+
+         <Link
+          to="/advertiser/raise-dispute"
+          className="bg-warning text-black p-6 rounded text-center hover:bg-yellow-700"
+        >
+          <h3 className="text-xl font-bold">Profile</h3>
+          <p>Raise Dispute</p>
         </Link>
       </div>
     </div>

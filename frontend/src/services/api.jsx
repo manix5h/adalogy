@@ -33,11 +33,13 @@ export const campaignAPI = {
 };
 
 export const taskAPI = {
-  joinCampaign: (data) => api.post('/tasks/join', data),
-  getWorkerTasks: () => api.get('/tasks/my-tasks'),
+  joinTask: (data) => api.post('/tasks/join', data),
+  getMyTasks: () => api.get('/tasks/my-tasks'),
   submitProof: (id, data) => api.patch(`/tasks/${id}/proof`, data),
+  getCampaignTasks: (campaignId) => api.get(`/tasks/campaign/${campaignId}`),
   approveTask: (id) => api.patch(`/tasks/${id}/approve`),
   rejectTask: (id, data) => api.patch(`/tasks/${id}/reject`, data),
+  
 };
 
 export const paymentAPI = {
